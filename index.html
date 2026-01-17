@@ -7,12 +7,14 @@
 </head>
 <body>
 
+<!-- LOGIN -->
 <div id="login">
   <h2>🔐 Connexion</h2>
   <input type="password" id="password" placeholder="Mot de passe">
   <button onclick="login()">Entrer</button>
 </div>
 
+<!-- APP -->
 <div id="app" style="display:none">
 
 <header>
@@ -55,12 +57,37 @@
   <button onclick="vendre()">Vendre</button>
 </section>
 
-<!-- RÉSUMÉ -->
+<!-- RESUME -->
 <section class="resume">
   <p>Total des ventes : <strong><span id="total">0</span> Ar</strong></p>
   <p>Bénéfice : <strong><span id="benefice">0</span> Ar</strong></p>
   <button onclick="imprimer()">🧾 Imprimer facture</button>
 </section>
+
+<!-- FACTURE -->
+<div id="facture" class="facture">
+  <h2>FACTURE</h2>
+  <p><strong>Entreprise :</strong> Andraina Service</p>
+  <p><strong>Date :</strong> <span id="dateFacture"></span></p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Désignation</th>
+        <th>Quantité</th>
+        <th>Prix de vente</th>
+        <th>Total</th>
+      </tr>
+    </thead>
+    <tbody id="factureLignes"></tbody>
+  </table>
+
+  <p class="facture-total">
+    <strong>Total à payer :</strong> <span id="totalFacture"></span> Ar
+  </p>
+
+  <p class="merci">🙏 Merci pour votre visite !</p>
+</div>
 
 </div>
 
