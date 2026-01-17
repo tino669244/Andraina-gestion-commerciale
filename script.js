@@ -1,3 +1,6 @@
+// PASSWORD
+const PASS = "1234";
+
 let produits = JSON.parse(localStorage.getItem("produits")) || [];
 let ventes = JSON.parse(localStorage.getItem("ventes")) || [];
 
@@ -6,75 +9,109 @@ function save() {
   localStorage.setItem("ventes", JSON.stringify(ventes));
 }
 
-function ajouterProduit() {
-  const nom = document.getElementById("nom").value;
-  const achat = Number(document.getElementById("achat").value);
-  const vente = Number(document.getElementById("vente").value);
-  const stock = Number(document.getElementById("stock").value);
-
-  if (!nom || stock <= 0) {
-    alert("Produit invalide");
-    return;
+// LOGIN
+function login() {
+  if (document.getElementById("password").value === PASS) {
+    document.getElementById("login").style.display="none";
+    document.getElementById("app").style.display="block";
+    afficher();
+  } else {
+    alert("Mot de passe incorrect");
   }
+}
 
-  produits.push({ nom, achat, vente, stock });
+// PRODUITS
+function toggleProduits() {
+  const p = document.getElementById("panelProduits");
+  p.style.display = p.style.display==="block" ? "none" : "block";
+}
+
+function ajouterProduit() {
+  produits.push({
+    nom: nom.value,
+    achat:+achat.value,
+    vente:+vente.value,
+    stock:+stock.value
+  });
   save();
   afficher();
 }
 
+function supprimerProduit(i) {
+  if(confirm("Supprimer ?")) {
+    produits.splice(i,1);
+    save();
+    afficher();
+  }
+}
+
+// VENTE
 function vendre() {
-  const index = document.getElementById("produitVente").value;
-  const qte = Number(document.getElementById("qteVente").value);
+  const i = produitVente.value;
+  const q = +qteVente.value;
+  if(!produits[i] || q<=0) return;
 
-  if (index === "" || qte <= 0) return;
-
-  const p = produits[index];
-  if (p.stock < qte) {
+  if(produits[i].stock < q) {
     alert("Stock insuffisant");
     return;
   }
 
-  p.stock -= qte;
-
+  produits[i].stock -= q;
   ventes.push({
-    total: p.vente * qte,
-    benefice: (p.vente - p.achat) * qte
+    total: produits[i].vente * q,
+    benef: (produits[i].vente - produits[i].achat) * q
   });
-
   save();
   afficher();
 }
 
+// AFFICHAGE
 function afficher() {
-  const tbody = document.getElementById("listeProduits");
-  const select = document.getElementById("produitVente");
+  listeProduits.innerHTML="";
+  produitVente.innerHTML="<option value=''>-- Produit --</option>";
 
-  tbody.innerHTML = "";
-  select.innerHTML = "<option value=''>-- Choisir produit --</option>";
-
-  produits.forEach((p, i) => {
-    tbody.innerHTML += `
+  produits.forEach((p,i)=>{
+    listeProduits.innerHTML+=`
       <tr>
         <td>${p.nom}</td>
         <td>${p.achat}</td>
         <td>${p.vente}</td>
         <td>${p.stock}</td>
-      </tr>
-    `;
-
-    select.innerHTML += `<option value="${i}">${p.nom}</option>`;
+        <td><button onclick="supprimerProduit(${i})">🗑</button></td>
+      </tr>`;
+    produitVente.innerHTML+=`<option value="${i}">${p.nom}</option>`;
   });
 
-  let total = 0;
-  let benef = 0;
-  ventes.forEach(v => {
-    total += v.total;
-    benef += v.benefice;
-  });
-
-  document.getElementById("totalVentes").innerText = total;
-  document.getElementById("benefice").innerText = benef;
+  let t=0,b=0;
+  ventes.forEach(v=>{t+=v.total;b+=v.benef});
+  total.innerText=t;
+  benefice.innerText=b;
 }
 
-afficher();
+// EXPORT / IMPORT
+function exporter() {
+  const data = {produits, ventes};
+  const blob = new Blob([JSON.stringify(data)], {type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "backup.json";
+  a.click();
+}
 
+function importer(e) {
+  const file = e.target.files[0];
+  const r = new FileReader();
+  r.onload = ()=>{
+    const data = JSON.parse(r.result);
+    produits=data.produits;
+    ventes=data.ventes;
+    save();
+    afficher();
+  };
+  r.readAsText(file);
+}
+
+// FACTURE
+function imprimer() {
+  window.print();
+}
