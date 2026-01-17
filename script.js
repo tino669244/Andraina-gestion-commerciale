@@ -147,9 +147,7 @@ function imprimer() {
   });
 
   document.getElementById("totalFacture").innerText = total;
-
-  document.getElementById("dateFacture").innerText =
-    new Date().toLocaleString();
+  document.getElementById("dateFacture").innerText = new Date().toLocaleString();
 
   window.print();
 }
