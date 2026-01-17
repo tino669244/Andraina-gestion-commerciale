@@ -1,8 +1,8 @@
 body {
-  font-family: Arial, sans-serif;
-  background: linear-gradient(135deg,#1c1c2b,#2d2d44);
   margin: 0;
-  color: #fff;
+  font-family: Arial, sans-serif;
+  background: linear-gradient(120deg,#1a1a2e,#16213e);
+  color: white;
 }
 
 #login {
@@ -19,15 +19,12 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #0f0f1a;
+  background: #0f3460;
   padding: 15px;
 }
 
-.btn-top {
-  background: #4caf50;
-  color: white;
-  border: none;
-  padding: 8px 12px;
+button {
+  padding: 7px 12px;
   cursor: pointer;
 }
 
@@ -43,9 +40,9 @@ header {
   display: none;
 }
 
-input, select, button {
+input, select {
   padding: 6px;
-  margin: 4px 0;
+  margin: 4px;
 }
 
 table {
