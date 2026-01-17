@@ -10,12 +10,11 @@ const produitVenteSelect = document.getElementById("produitVente");
 
 // ===== DATA =====
 let produits = JSON.parse(localStorage.getItem("produits")) || [];
-let ventes = JSON.parse(localStorage.getItem("ventes")) || [];
+let ventes = []; // ventes courantes pour la facture seulement
 
-// ===== SAVE =====
+// ===== SAVE PRODUITS =====
 function save() {
   localStorage.setItem("produits", JSON.stringify(produits));
-  localStorage.setItem("ventes", JSON.stringify(ventes));
 }
 
 // ===== LOGIN =====
@@ -52,15 +51,11 @@ function ajouterProduit() {
 }
 
 function supprimerProduit(index) {
-  if (!confirm("Supprimer ce produit et ses ventes associées ?")) return;
+  if (!confirm("Supprimer ce produit ?")) return;
 
-  ventes = ventes.filter(v => v.produitIndex !== index);
   produits.splice(index, 1);
-
-  ventes.forEach(v => {
-    if (v.produitIndex > index) v.produitIndex--;
-  });
-
+  // reset les ventes courantes qui concernent ce produit
+  ventes = ventes.filter(v => v.produitIndex !== index);
   save();
   afficher();
 }
@@ -109,14 +104,22 @@ function afficher() {
     produitVenteSelect.innerHTML += `<option value="${i}">${p.nom}</option>`;
   });
 
+  // total et benefice courants
   let total = 0;
-  ventes.forEach(v => total += v.total);
+  let benefice = 0;
+  ventes.forEach(v => {
+    total += v.total;
+    const achatProduit = produits[v.produitIndex] ? produits[v.produitIndex].achat : 0;
+    benefice += (v.prix - achatProduit) * v.qte;
+  });
+
   document.getElementById("total").innerText = total;
+  document.getElementById("benefice").innerText = benefice;
 }
 
 // ===== EXPORT / IMPORT =====
 function exporter() {
-  const data = { produits, ventes };
+  const data = { produits };
   const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
@@ -130,7 +133,6 @@ function importer(e) {
   reader.onload = () => {
     const data = JSON.parse(reader.result);
     produits = data.produits || [];
-    ventes = data.ventes || [];
     save();
     afficher();
   };
@@ -140,7 +142,7 @@ function importer(e) {
 // ===== FACTURE =====
 function imprimer() {
   factureLignes.innerHTML = "";
-  let total = 0;
+  let totalFacture = 0;
 
   ventes.forEach(v => {
     factureLignes.innerHTML += `
@@ -150,11 +152,15 @@ function imprimer() {
         <td>${v.prix}</td>
         <td>${v.total}</td>
       </tr>`;
-    total += v.total;
+    totalFacture += v.total;
   });
 
-  document.getElementById("totalFacture").innerText = total;
+  document.getElementById("totalFacture").innerText = totalFacture;
   document.getElementById("dateFacture").innerText = new Date().toLocaleString();
 
   window.print();
+
+  // 🔹 remise à zéro ventes courantes après impression
+  ventes = [];
+  afficher();
 }
