@@ -1,1 +1,51 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Andraina Gestion Commerciale</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
 
+<h1>Andraina Gestion Commerciale</h1>
+
+<section>
+  <h2>➕ Ajouter un produit</h2>
+  <input id="nom" placeholder="Nom du produit">
+  <input id="achat" type="number" placeholder="Prix d'achat">
+  <input id="vente" type="number" placeholder="Prix de vente">
+  <input id="stock" type="number" placeholder="Quantité">
+  <button onclick="ajouterProduit()">Ajouter</button>
+</section>
+
+<section>
+  <h2>🛒 Vente</h2>
+  <select id="produitVente"></select>
+  <input id="qteVente" type="number" placeholder="Quantité à vendre">
+  <button onclick="vendre()">Vendre</button>
+</section>
+
+<section>
+  <h2>📦 Stock & Produits</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Produit</th>
+        <th>Achat</th>
+        <th>Vente</th>
+        <th>Stock</th>
+      </tr>
+    </thead>
+    <tbody id="listeProduits"></tbody>
+  </table>
+</section>
+
+<section>
+  <h2>📊 Résumé</h2>
+  <p>Total ventes : <span id="totalVentes">0</span> Ar</p>
+  <p>Bénéfice : <span id="benefice">0</span> Ar</p>
+</section>
+
+<script src="script.js"></script>
+</body>
+</html>
