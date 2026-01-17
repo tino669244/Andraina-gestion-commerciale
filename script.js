@@ -13,9 +13,9 @@ function save() {
 
 // ===== LOGIN =====
 function login() {
-  if (document.getElementById("password").value === PASSWORD) {
-    document.getElementById("login").style.display = "none";
-    document.getElementById("app").style.display = "block";
+  if (password.value === PASSWORD) {
+    login.style.display = "none";
+    app.style.display = "block";
     afficher();
   } else {
     alert("Mot de passe incorrect");
@@ -24,8 +24,8 @@ function login() {
 
 // ===== PRODUITS =====
 function toggleProduits() {
-  const p = document.getElementById("panelProduits");
-  p.style.display = (p.style.display === "block") ? "none" : "block";
+  panelProduits.style.display =
+    panelProduits.style.display === "block" ? "none" : "block";
 }
 
 function ajouterProduit() {
@@ -45,11 +45,21 @@ function ajouterProduit() {
 }
 
 function supprimerProduit(index) {
-  if (confirm("Supprimer ce produit ?")) {
-    produits.splice(index, 1);
-    save();
-    afficher();
-  }
+  if (!confirm("Supprimer ce produit et ses ventes associées ?")) return;
+
+  // Supprimer les ventes liées au produit
+  ventes = ventes.filter(v => v.produitIndex !== index);
+
+  // Supprimer le produit
+  produits.splice(index, 1);
+
+  // Réindexer les ventes restantes
+  ventes.forEach(v => {
+    if (v.produitIndex > index) v.produitIndex--;
+  });
+
+  save();
+  afficher();
 }
 
 // ===== VENTE =====
@@ -67,6 +77,8 @@ function vendre() {
   produits[i].stock -= qte;
 
   ventes.push({
+    produitIndex: Number(i),
+    qte,
     total: produits[i].vente * qte,
     benefice: (produits[i].vente - produits[i].achat) * qte
   });
@@ -76,10 +88,10 @@ function vendre() {
   qteVente.value = "";
 }
 
-// ===== AFFICHAGE =====
+// ===== AFFICHAGE & RECALCUL =====
 function afficher() {
   listeProduits.innerHTML = "";
-  produitVente.innerHTML = "<option value=''>-- Choisir produit --</option>";
+  produitVente.innerHTML = "<option value=''>-- Produit --</option>";
 
   produits.forEach((p, i) => {
     listeProduits.innerHTML += `
@@ -89,12 +101,14 @@ function afficher() {
         <td>${p.vente}</td>
         <td>${p.stock}</td>
         <td><button onclick="supprimerProduit(${i})">🗑</button></td>
-      </tr>
-    `;
+      </tr>`;
     produitVente.innerHTML += `<option value="${i}">${p.nom}</option>`;
   });
 
-  let total = 0, benef = 0;
+  // 🔁 RECALCUL AUTOMATIQUE
+  let total = 0;
+  let benef = 0;
+
   ventes.forEach(v => {
     total += v.total;
     benef += v.benefice;
@@ -110,12 +124,12 @@ function exporter() {
   const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = "andraina-gestion-backup.json";
+  a.download = "andraina-gestion-pro.json";
   a.click();
 }
 
-function importer(event) {
-  const file = event.target.files[0];
+function importer(e) {
+  const file = e.target.files[0];
   const reader = new FileReader();
   reader.onload = () => {
     const data = JSON.parse(reader.result);
