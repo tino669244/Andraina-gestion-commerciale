@@ -14,28 +14,32 @@
   <button onclick="login()">Entrer</button>
 </div>
 
-<!-- APP -->
+<!-- APPLICATION -->
 <div id="app" style="display:none">
 
 <header>
   <h1>Andraina Gestion Commerciale</h1>
-  <button onclick="toggleProduits()">📦 Liste Produits</button>
+  <button class="btn-top" onclick="toggleProduits()">📦 Liste de produits</button>
 </header>
 
-<!-- PRODUITS PANEL -->
+<!-- PRODUITS -->
 <div id="panelProduits" class="panel">
-  <h2>Produits</h2>
+  <h2>Gestion des produits</h2>
 
-  <input id="nom" placeholder="Nom produit">
-  <input id="achat" type="number" placeholder="Prix achat">
-  <input id="vente" type="number" placeholder="Prix vente">
+  <input id="nom" placeholder="Nom du produit">
+  <input id="achat" type="number" placeholder="Prix d'achat">
+  <input id="vente" type="number" placeholder="Prix de vente">
   <input id="stock" type="number" placeholder="Quantité">
   <button onclick="ajouterProduit()">➕ Ajouter</button>
 
   <table>
     <thead>
       <tr>
-        <th>Produit</th><th>Achat</th><th>Vente</th><th>Stock</th><th>Action</th>
+        <th>Produit</th>
+        <th>Achat</th>
+        <th>Vente</th>
+        <th>Stock</th>
+        <th>Action</th>
       </tr>
     </thead>
     <tbody id="listeProduits"></tbody>
@@ -53,11 +57,11 @@
   <button onclick="vendre()">Vendre</button>
 </section>
 
-<!-- RESUME -->
+<!-- RÉSUMÉ -->
 <section class="resume">
-  <p>Total ventes : <span id="total">0</span> Ar</p>
-  <p>Bénéfice : <span id="benefice">0</span> Ar</p>
-  <button onclick="imprimer()">🧾 Facture</button>
+  <p>Total des ventes : <strong><span id="total">0</span> Ar</strong></p>
+  <p>Bénéfice : <strong><span id="benefice">0</span> Ar</strong></p>
+  <button onclick="imprimer()">🧾 Imprimer facture</button>
 </section>
 
 </div>
