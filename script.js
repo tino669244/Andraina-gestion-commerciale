@@ -47,13 +47,9 @@ function ajouterProduit() {
 function supprimerProduit(index) {
   if (!confirm("Supprimer ce produit et ses ventes associées ?")) return;
 
-  // Supprimer les ventes liées au produit
   ventes = ventes.filter(v => v.produitIndex !== index);
-
-  // Supprimer le produit
   produits.splice(index, 1);
 
-  // Réindexer les ventes restantes
   ventes.forEach(v => {
     if (v.produitIndex > index) v.produitIndex--;
   });
@@ -78,9 +74,10 @@ function vendre() {
 
   ventes.push({
     produitIndex: Number(i),
+    designation: produits[i].nom,
     qte,
-    total: produits[i].vente * qte,
-    benefice: (produits[i].vente - produits[i].achat) * qte
+    prix: produits[i].vente,
+    total: produits[i].vente * qte
   });
 
   save();
@@ -88,7 +85,7 @@ function vendre() {
   qteVente.value = "";
 }
 
-// ===== AFFICHAGE & RECALCUL =====
+// ===== AFFICHAGE =====
 function afficher() {
   listeProduits.innerHTML = "";
   produitVente.innerHTML = "<option value=''>-- Produit --</option>";
@@ -105,17 +102,9 @@ function afficher() {
     produitVente.innerHTML += `<option value="${i}">${p.nom}</option>`;
   });
 
-  // 🔁 RECALCUL AUTOMATIQUE
   let total = 0;
-  let benef = 0;
-
-  ventes.forEach(v => {
-    total += v.total;
-    benef += v.benefice;
-  });
-
+  ventes.forEach(v => total += v.total);
   document.getElementById("total").innerText = total;
-  document.getElementById("benefice").innerText = benef;
 }
 
 // ===== EXPORT / IMPORT =====
@@ -124,7 +113,7 @@ function exporter() {
   const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = "andraina-gestion-pro.json";
+  a.download = "andraina-service-backup.json";
   a.click();
 }
 
@@ -143,5 +132,24 @@ function importer(e) {
 
 // ===== FACTURE =====
 function imprimer() {
+  factureLignes.innerHTML = "";
+  let total = 0;
+
+  ventes.forEach(v => {
+    factureLignes.innerHTML += `
+      <tr>
+        <td>${v.designation}</td>
+        <td>${v.qte}</td>
+        <td>${v.prix}</td>
+        <td>${v.total}</td>
+      </tr>`;
+    total += v.total;
+  });
+
+  document.getElementById("totalFacture").innerText = total;
+
+  document.getElementById("dateFacture").innerText =
+    new Date().toLocaleString();
+
   window.print();
 }
