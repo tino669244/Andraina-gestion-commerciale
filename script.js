@@ -1,6 +1,13 @@
 // ===== CONFIG =====
 const PASSWORD = "1234";
 
+// ===== DOM ELEMENTS =====
+const passwordInput = document.getElementById("password");
+const loginDiv = document.getElementById("login");
+const loginBtn = document.getElementById("loginBtn");
+const appDiv = document.getElementById("app");
+const produitVenteSelect = document.getElementById("produitVente");
+
 // ===== DATA =====
 let produits = JSON.parse(localStorage.getItem("produits")) || [];
 let ventes = JSON.parse(localStorage.getItem("ventes")) || [];
@@ -12,15 +19,15 @@ function save() {
 }
 
 // ===== LOGIN =====
-function login() {
-  if (password.value === PASSWORD) {
-    login.style.display = "none";
-    app.style.display = "block";
+loginBtn.addEventListener("click", () => {
+  if (passwordInput.value === PASSWORD) {
+    loginDiv.style.display = "none";
+    appDiv.style.display = "block";
     afficher();
   } else {
     alert("Mot de passe incorrect");
   }
-}
+});
 
 // ===== PRODUITS =====
 function toggleProduits() {
@@ -88,7 +95,7 @@ function vendre() {
 // ===== AFFICHAGE =====
 function afficher() {
   listeProduits.innerHTML = "";
-  produitVente.innerHTML = "<option value=''>-- Produit --</option>";
+  produitVenteSelect.innerHTML = "<option value=''>-- Produit --</option>";
 
   produits.forEach((p, i) => {
     listeProduits.innerHTML += `
@@ -99,7 +106,7 @@ function afficher() {
         <td>${p.stock}</td>
         <td><button onclick="supprimerProduit(${i})">🗑</button></td>
       </tr>`;
-    produitVente.innerHTML += `<option value="${i}">${p.nom}</option>`;
+    produitVenteSelect.innerHTML += `<option value="${i}">${p.nom}</option>`;
   });
 
   let total = 0;
