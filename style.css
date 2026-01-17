@@ -60,3 +60,40 @@ th, td {
 .resume {
   font-size: 18px;
 }
+
+/* FACTURE */
+.facture {
+  display: none;
+  background: white;
+  color: black;
+  padding: 20px;
+}
+
+.facture-total {
+  margin-top: 15px;
+  font-size: 18px;
+}
+
+.merci {
+  margin-top: 30px;
+  text-align: center;
+  font-weight: bold;
+}
+
+/* PRINT */
+@media print {
+  body {
+    background: white;
+  }
+
+  header,
+  #panelProduits,
+  section,
+  button {
+    display: none;
+  }
+
+  .facture {
+    display: block;
+  }
+}
