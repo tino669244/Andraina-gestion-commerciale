@@ -1,19 +1,29 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8" />
+  <meta charset="UTF-8">
   <title>Andraina Gestion Commerciale</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body onload="init()">
+<body onload="initApp()">
 
+<!-- LOGIN -->
+<div id="loginBox" class="login">
+  <h2>Andraina Sacrifice</h2>
+  <input id="loginPass" type="password" placeholder="Mot de passe">
+  <button onclick="login()">Connexion</button>
+</div>
+
+<!-- APP -->
+<div id="app" style="display:none">
 <header>
   <h1>Andraina Gestion Commerciale</h1>
   <div class="ca">CA Total : <span id="caTotal">0</span> Ar</div>
+  <button onclick="logout()">Déconnexion</button>
 </header>
 
 <section class="box">
-  <h2>Ajouter un produit</h2>
+  <h2>Ajouter produit</h2>
   <input id="designation" placeholder="Désignation">
   <input id="achat" type="number" placeholder="Prix achat">
   <input id="vente" type="number" placeholder="Prix vente">
@@ -22,47 +32,35 @@
 </section>
 
 <section class="box">
-  <h2>Liste des produits</h2>
-  <input id="search" placeholder="🔍 Rechercher..." onkeyup="recherche()">
-
+  <h2>Produits</h2>
+  <input id="search" placeholder="🔍 Rechercher" onkeyup="recherche()">
   <table>
     <thead>
-      <tr>
-        <th>Désignation</th>
-        <th>Stock</th>
-        <th>Prix</th>
-        <th>Action</th>
-      </tr>
+      <tr><th>Produit</th><th>Stock</th><th>Prix</th><th>Action</th></tr>
     </thead>
     <tbody id="listeProduits"></tbody>
   </table>
 </section>
 
 <section class="box">
-  <h2>Facture (session)</h2>
+  <h2>Facture</h2>
   <table>
     <thead>
-      <tr>
-        <th>Produit</th>
-        <th>Qté</th>
-        <th>Prix</th>
-        <th>Total</th>
-        <th></th>
-      </tr>
+      <tr><th>Produit</th><th>Qté</th><th>Prix</th><th>Total</th><th></th></tr>
     </thead>
     <tbody id="facture"></tbody>
   </table>
-
-  <div class="total">
-    Total facture : <span id="totalFacture">0</span> Ar
-  </div>
-
-  <button class="valider" onclick="validerFacture()">Valider facture</button>
+  <div class="total">Total : <span id="totalFacture">0</span> Ar</div>
+  <button class="valider" onclick="validerFacture()">Valider</button>
 </section>
 
-<footer>
-  Merci pour votre visite !
-</footer>
+<section class="box">
+  <h2>Export</h2>
+  <button onclick="exportCSV()">Exporter données</button>
+</section>
+
+<footer>Merci pour votre visite !</footer>
+</div>
 
 <script src="script.js"></script>
 </body>
