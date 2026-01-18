@@ -1,34 +1,20 @@
 body {
-  margin: 0;
   font-family: Arial, sans-serif;
-  background: linear-gradient(120deg,#1a1a2e,#16213e);
-  color: white;
-}
-
-#login {
-  text-align: center;
-  margin-top: 150px;
-}
-
-#login input, #login button {
-  padding: 10px;
-  margin: 5px;
+  background: linear-gradient(120deg, #1e3c72, #2a5298);
+  color: #fff;
+  margin: 0;
 }
 
 header {
+  background: #000000aa;
+  padding: 15px;
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  background: #0f3460;
-  padding: 15px;
 }
 
-button {
-  padding: 7px 12px;
-  cursor: pointer;
-}
+h1 { margin: 0; }
 
-.panel, section {
+.box {
   background: #ffffff;
   color: #000;
   margin: 20px;
@@ -36,77 +22,55 @@ button {
   border-radius: 8px;
 }
 
-.panel {
-  display: none;
+input {
+  padding: 8px;
+  margin: 5px;
 }
 
-input, select {
-  padding: 6px;
-  margin: 4px;
+button {
+  padding: 8px 12px;
+  background: #2a5298;
+  color: #fff;
+  border: none;
+  cursor: pointer;
+}
+
+.valider {
+  background: green;
+  margin-top: 10px;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
+}
+
+th {
+  background: #2a5298;
+  color: white;
+}
+
+td, th {
+  padding: 6px;
+  border: 1px solid #ccc;
+  text-align: center;
+}
+
+tr:nth-child(even) {
+  background: #f2f2f2;
+}
+
+.total {
+  font-size: 18px;
   margin-top: 10px;
 }
 
-th, td {
-  border: 1px solid #ccc;
-  padding: 6px;
-  text-align: center;
-}
-
-.resume {
+.ca {
   font-size: 18px;
+  color: #00ffcc;
 }
 
-/* LOGO */
-.logo {
+footer {
   text-align: center;
-  font-size: 28px;
-  font-weight: bold;
-  color: #0f3460;
-  background: #f1f1f1;
-  padding: 15px;
-  margin-bottom: 15px;
-  border-radius: 10px;
-  border: 2px solid #0f3460;
-}
-
-/* FACTURE */
-.facture {
-  display: none;
-  background: white;
-  color: black;
-  padding: 20px;
-}
-
-.facture-total {
-  margin-top: 15px;
-  font-size: 18px;
-}
-
-.merci {
-  margin-top: 30px;
-  text-align: center;
-  font-weight: bold;
-}
-
-/* PRINT */
-@media print {
-  body {
-    background: white;
-  }
-
-  header,
-  #panelProduits,
-  section,
-  button {
-    display: none;
-  }
-
-  .facture {
-    display: block;
-  }
+  padding: 10px;
 }
