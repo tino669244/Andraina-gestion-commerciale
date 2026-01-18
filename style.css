@@ -1,76 +1,50 @@
-body {
-  font-family: Arial, sans-serif;
-  background: linear-gradient(120deg, #1e3c72, #2a5298);
-  color: #fff;
-  margin: 0;
+body{
+  font-family: Arial;
+  background: linear-gradient(120deg,#1e3c72,#2a5298);
+  margin:0;
+}
+.login{
+  width:300px;
+  margin:120px auto;
+  background:#fff;
+  padding:20px;
+  text-align:center;
+  border-radius:8px;
+}
+.login h2{color:#2a5298;}
+.login input{width:100%;padding:8px;margin:10px 0;}
+
+header{
+  background:#000000aa;
+  color:#fff;
+  padding:15px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
 }
 
-header {
-  background: #000000aa;
-  padding: 15px;
-  display: flex;
-  justify-content: space-between;
+.box{
+  background:#fff;
+  margin:20px;
+  padding:15px;
+  border-radius:8px;
 }
 
-h1 { margin: 0; }
-
-.box {
-  background: #ffffff;
-  color: #000;
-  margin: 20px;
-  padding: 15px;
-  border-radius: 8px;
+input{padding:6px;margin:4px;}
+button{
+  padding:6px 10px;
+  background:#2a5298;
+  color:#fff;
+  border:none;
+  cursor:pointer;
 }
+.valider{background:green;}
 
-input {
-  padding: 8px;
-  margin: 5px;
-}
+table{width:100%;border-collapse:collapse;}
+th{background:#2a5298;color:#fff;}
+td,th{border:1px solid #ccc;padding:5px;text-align:center;}
+tr:nth-child(even){background:#f2f2f2;}
 
-button {
-  padding: 8px 12px;
-  background: #2a5298;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-}
-
-.valider {
-  background: green;
-  margin-top: 10px;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th {
-  background: #2a5298;
-  color: white;
-}
-
-td, th {
-  padding: 6px;
-  border: 1px solid #ccc;
-  text-align: center;
-}
-
-tr:nth-child(even) {
-  background: #f2f2f2;
-}
-
-.total {
-  font-size: 18px;
-  margin-top: 10px;
-}
-
-.ca {
-  font-size: 18px;
-  color: #00ffcc;
-}
-
-footer {
-  text-align: center;
-  padding: 10px;
-}
+.ca{color:#00ffcc;font-size:18px;}
+.total{font-size:18px;margin-top:10px;}
+footer{text-align:center;color:#fff;padding:10px;}
