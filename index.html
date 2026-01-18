@@ -1,96 +1,68 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Andraina Gestion Commerciale</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body>
-
-<!-- LOGIN -->
-<div id="login">
-  <h2>🔐 Connexion</h2>
-  <input type="password" id="password" placeholder="Mot de passe">
-  <button id="loginBtn">Entrer</button>
-</div>
-
-<!-- APP -->
-<div id="app" style="display:none">
+<body onload="init()">
 
 <header>
   <h1>Andraina Gestion Commerciale</h1>
-  <button onclick="toggleProduits()">📦 Liste de produits</button>
+  <div class="ca">CA Total : <span id="caTotal">0</span> Ar</div>
 </header>
 
-<!-- PRODUITS -->
-<div id="panelProduits" class="panel">
-  <h2>Produits</h2>
-  <input id="nom" placeholder="Nom produit">
+<section class="box">
+  <h2>Ajouter un produit</h2>
+  <input id="designation" placeholder="Désignation">
   <input id="achat" type="number" placeholder="Prix achat">
   <input id="vente" type="number" placeholder="Prix vente">
   <input id="stock" type="number" placeholder="Stock">
-  <button onclick="ajouterProduit()">➕ Ajouter</button>
-
-  <table>
-    <thead>
-      <tr>
-        <th>Produit</th>
-        <th>Achat</th>
-        <th>Vente</th>
-        <th>Stock</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody id="listeProduits"></tbody>
-  </table>
-
-  <button onclick="exporter()">📤 Export</button>
-  <input type="file" onchange="importer(event)">
-</div>
-
-<!-- VENTE -->
-<section>
-  <h2>🛒 Vente</h2>
-  <select id="produitVente"></select>
-  <input id="qteVente" type="number" placeholder="Quantité">
-  <button onclick="vendre()">Vendre</button>
+  <button onclick="ajouterProduit()">Ajouter</button>
 </section>
 
-<!-- RESUME -->
-<section class="resume">
-  <p>Total des ventes courantes : <strong><span id="total">0</span> Ar</strong></p>
-  <p>Bénéfice actuel : <strong><span id="benefice">0</span> Ar</strong></p>
-  <button onclick="imprimer()">🧾 Imprimer facture</button>
-</section>
-
-<!-- FACTURE -->
-<div id="facture" class="facture">
-  <!-- LOGO -->
-  <div class="logo">ANDRAINA SERVICE</div>
-
-  <h2>FACTURE</h2>
-  <p><strong>Date :</strong> <span id="dateFacture"></span></p>
+<section class="box">
+  <h2>Liste des produits</h2>
+  <input id="search" placeholder="🔍 Rechercher..." onkeyup="recherche()">
 
   <table>
     <thead>
       <tr>
         <th>Désignation</th>
-        <th>Quantité</th>
-        <th>Prix de vente</th>
-        <th>Total</th>
+        <th>Stock</th>
+        <th>Prix</th>
+        <th>Action</th>
       </tr>
     </thead>
-    <tbody id="factureLignes"></tbody>
+    <tbody id="listeProduits"></tbody>
+  </table>
+</section>
+
+<section class="box">
+  <h2>Facture (session)</h2>
+  <table>
+    <thead>
+      <tr>
+        <th>Produit</th>
+        <th>Qté</th>
+        <th>Prix</th>
+        <th>Total</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="facture"></tbody>
   </table>
 
-  <p class="facture-total">
-    <strong>Total à payer :</strong> <span id="totalFacture"></span> Ar
-  </p>
+  <div class="total">
+    Total facture : <span id="totalFacture">0</span> Ar
+  </div>
 
-  <p class="merci">🙏 Merci pour votre visite !</p>
-</div>
+  <button class="valider" onclick="validerFacture()">Valider facture</button>
+</section>
 
-</div>
+<footer>
+  Merci pour votre visite !
+</footer>
 
 <script src="script.js"></script>
 </body>
