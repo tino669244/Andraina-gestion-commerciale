@@ -1,166 +1,110 @@
-// ===== CONFIG =====
-const PASSWORD = "1234";
-
-// ===== DOM ELEMENTS =====
-const passwordInput = document.getElementById("password");
-const loginDiv = document.getElementById("login");
-const loginBtn = document.getElementById("loginBtn");
-const appDiv = document.getElementById("app");
-const produitVenteSelect = document.getElementById("produitVente");
-
-// ===== DATA =====
 let produits = JSON.parse(localStorage.getItem("produits")) || [];
-let ventes = []; // ventes courantes pour la facture seulement
+let facture = [];
+let caTotal = Number(localStorage.getItem("caTotal")) || 0;
 
-// ===== SAVE PRODUITS =====
-function save() {
-  localStorage.setItem("produits", JSON.stringify(produits));
+function init() {
+  afficherProduits();
+  document.getElementById("caTotal").innerText = caTotal;
 }
 
-// ===== LOGIN =====
-loginBtn.addEventListener("click", () => {
-  if (passwordInput.value === PASSWORD) {
-    loginDiv.style.display = "none";
-    appDiv.style.display = "block";
-    afficher();
-  } else {
-    alert("Mot de passe incorrect");
-  }
-});
-
-// ===== PRODUITS =====
-function toggleProduits() {
-  panelProduits.style.display =
-    panelProduits.style.display === "block" ? "none" : "block";
+function save() {
+  localStorage.setItem("produits", JSON.stringify(produits));
+  localStorage.setItem("caTotal", caTotal);
 }
 
 function ajouterProduit() {
-  if (!nom.value || !achat.value || !vente.value || !stock.value) return;
+  let d = designation.value;
+  let a = Number(achat.value);
+  let v = Number(vente.value);
+  let s = Number(stock.value);
 
-  produits.push({
-    nom: nom.value,
-    achat: Number(achat.value),
-    vente: Number(vente.value),
-    stock: Number(stock.value)
-  });
+  if (!d) return alert("Désignation obligatoire");
 
+  produits.push({ d, a, v, s });
   save();
-  afficher();
-
-  nom.value = achat.value = vente.value = stock.value = "";
+  afficherProduits();
 }
 
-function supprimerProduit(index) {
-  if (!confirm("Supprimer ce produit ?")) return;
-
-  produits.splice(index, 1);
-  // reset les ventes courantes qui concernent ce produit
-  ventes = ventes.filter(v => v.produitIndex !== index);
-  save();
-  afficher();
-}
-
-// ===== VENTE =====
-function vendre() {
-  const i = produitVente.value;
-  const qte = Number(qteVente.value);
-
-  if (i === "" || qte <= 0) return;
-
-  if (produits[i].stock < qte) {
-    alert("Stock insuffisant");
-    return;
-  }
-
-  produits[i].stock -= qte;
-
-  ventes.push({
-    produitIndex: Number(i),
-    designation: produits[i].nom,
-    qte,
-    prix: produits[i].vente,
-    total: produits[i].vente * qte
-  });
-
-  save();
-  afficher();
-  qteVente.value = "";
-}
-
-// ===== AFFICHAGE =====
-function afficher() {
-  listeProduits.innerHTML = "";
-  produitVenteSelect.innerHTML = "<option value=''>-- Produit --</option>";
-
+function afficherProduits() {
+  let html = "";
   produits.forEach((p, i) => {
-    listeProduits.innerHTML += `
+    html += `
       <tr>
-        <td>${p.nom}</td>
-        <td>${p.achat}</td>
-        <td>${p.vente}</td>
-        <td>${p.stock}</td>
-        <td><button onclick="supprimerProduit(${i})">🗑</button></td>
+        <td>${p.d}</td>
+        <td>${p.s}</td>
+        <td>${p.v}</td>
+        <td>
+          <button onclick="vendre(${i})">Vendre</button>
+          <button onclick="supprimerProduit(${i})">❌</button>
+        </td>
       </tr>`;
-    produitVenteSelect.innerHTML += `<option value="${i}">${p.nom}</option>`;
   });
+  listeProduits.innerHTML = html;
+}
 
-  // total et benefice courants
+function vendre(i) {
+  if (produits[i].s <= 0) return alert("Stock insuffisant");
+  produits[i].s--;
+
+  let ligne = facture.find(f => f.d === produits[i].d);
+  if (ligne) ligne.q++;
+  else facture.push({ d: produits[i].d, q: 1, p: produits[i].v });
+
+  afficherFacture();
+  save();
+}
+
+function afficherFacture() {
+  let html = "";
   let total = 0;
-  let benefice = 0;
-  ventes.forEach(v => {
-    total += v.total;
-    const achatProduit = produits[v.produitIndex] ? produits[v.produitIndex].achat : 0;
-    benefice += (v.prix - achatProduit) * v.qte;
-  });
 
-  document.getElementById("total").innerText = total;
-  document.getElementById("benefice").innerText = benefice;
-}
-
-// ===== EXPORT / IMPORT =====
-function exporter() {
-  const data = { produits };
-  const blob = new Blob([JSON.stringify(data)], { type: "application/json" });
-  const a = document.createElement("a");
-  a.href = URL.createObjectURL(blob);
-  a.download = "andraina-service-backup.json";
-  a.click();
-}
-
-function importer(e) {
-  const file = e.target.files[0];
-  const reader = new FileReader();
-  reader.onload = () => {
-    const data = JSON.parse(reader.result);
-    produits = data.produits || [];
-    save();
-    afficher();
-  };
-  reader.readAsText(file);
-}
-
-// ===== FACTURE =====
-function imprimer() {
-  factureLignes.innerHTML = "";
-  let totalFacture = 0;
-
-  ventes.forEach(v => {
-    factureLignes.innerHTML += `
+  facture.forEach((f, i) => {
+    let t = f.q * f.p;
+    total += t;
+    html += `
       <tr>
-        <td>${v.designation}</td>
-        <td>${v.qte}</td>
-        <td>${v.prix}</td>
-        <td>${v.total}</td>
+        <td>${f.d}</td>
+        <td>${f.q}</td>
+        <td>${f.p}</td>
+        <td>${t}</td>
+        <td><button onclick="supprimerLigne(${i})">❌</button></td>
       </tr>`;
-    totalFacture += v.total;
   });
 
-  document.getElementById("totalFacture").innerText = totalFacture;
-  document.getElementById("dateFacture").innerText = new Date().toLocaleString();
+  factureBody = document.getElementById("facture");
+  factureBody.innerHTML = html;
+  totalFacture.innerText = total;
+}
 
-  window.print();
+function supprimerLigne(i) {
+  facture.splice(i, 1);
+  afficherFacture();
+}
 
-  // 🔹 remise à zéro ventes courantes après impression
-  ventes = [];
-  afficher();
+function supprimerProduit(i) {
+  produits.splice(i, 1);
+  save();
+  afficherProduits();
+}
+
+function validerFacture() {
+  let total = Number(totalFacture.innerText);
+  if (total === 0) return alert("Facture vide");
+
+  caTotal += total;
+  facture = [];
+
+  document.getElementById("facture").innerHTML = "";
+  totalFacture.innerText = 0;
+  document.getElementById("caTotal").innerText = caTotal;
+
+  save();
+  afficherProduits();
+}
+
+function recherche() {
+  let q = search.value.toLowerCase();
+  document.querySelectorAll("#listeProduits tr").forEach(tr => {
+    tr.style.display = tr.innerText.toLowerCase().includes(q) ? "" : "none";
+  });
 }
