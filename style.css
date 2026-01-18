@@ -1,8 +1,9 @@
 body{
-  font-family: Arial;
+  font-family: Arial, sans-serif;
   background: linear-gradient(120deg,#1e3c72,#2a5298);
   margin:0;
 }
+
 .login{
   width:300px;
   margin:120px auto;
@@ -11,11 +12,12 @@ body{
   text-align:center;
   border-radius:8px;
 }
+
 .login h2{color:#2a5298;}
 .login input{width:100%;padding:8px;margin:10px 0;}
 
 header{
-  background:#000000aa;
+  background:#000000cc;
   color:#fff;
   padding:15px;
   display:flex;
@@ -32,7 +34,7 @@ header{
 
 input{padding:6px;margin:4px;}
 button{
-  padding:6px 10px;
+  padding:6px 12px;
   background:#2a5298;
   color:#fff;
   border:none;
@@ -40,11 +42,26 @@ button{
 }
 .valider{background:green;}
 
-table{width:100%;border-collapse:collapse;}
-th{background:#2a5298;color:#fff;}
-td,th{border:1px solid #ccc;padding:5px;text-align:center;}
+table{
+  width:100%;
+  border-collapse:collapse;
+}
+th{
+  background:#2a5298;
+  color:#fff;
+}
+td,th{
+  border:1px solid #ccc;
+  padding:6px;
+  text-align:center;
+}
 tr:nth-child(even){background:#f2f2f2;}
 
 .ca{color:#00ffcc;font-size:18px;}
 .total{font-size:18px;margin-top:10px;}
-footer{text-align:center;color:#fff;padding:10px;}
+
+footer{
+  text-align:center;
+  color:#fff;
+  padding:10px;
+}
