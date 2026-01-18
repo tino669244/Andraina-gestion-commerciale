@@ -1,26 +1,20 @@
-/* ===== LOGIN ===== */
-const PASS_HASH = "202cb962ac59075b964b07152d234b70"; // md5("123")
-
-function md5(str){return CryptoJS.MD5(str).toString();}
+/* ================= LOGIN SIMPLE ================= */
+const PASSWORD = "123"; // mot de passe
 
 function initApp(){
   if(localStorage.getItem("logged")==="true"){
-    loginOK();
+    showApp();
   }
 }
 
 function login(){
-  let p = loginPass.value;
-  if(md5(p) === PASS_HASH){
+  const p = document.getElementById("loginPass").value;
+  if(p === PASSWORD){
     localStorage.setItem("logged","true");
-    loginOK();
-  } else alert("Mot de passe incorrect");
-}
-
-function loginOK(){
-  loginBox.style.display="none";
-  app.style.display="block";
-  initData();
+    showApp();
+  } else {
+    alert("Mot de passe incorrect");
+  }
 }
 
 function logout(){
@@ -28,102 +22,151 @@ function logout(){
   location.reload();
 }
 
-/* ===== DATA ===== */
-let produits=[], facture=[], caTotal=0;
+function showApp(){
+  document.getElementById("loginBox").style.display="none";
+  document.getElementById("app").style.display="block";
+  initData();
+}
+
+/* ================= DATA ================= */
+let produits = [];
+let facture = [];
+let caTotal = 0;
 
 function initData(){
   produits = JSON.parse(localStorage.getItem("produits")) || [];
   caTotal = Number(localStorage.getItem("caTotal")) || 0;
-  caTotalSpan();
+  updateCA();
   afficherProduits();
 }
 
 function save(){
-  localStorage.setItem("produits",JSON.stringify(produits));
-  localStorage.setItem("caTotal",caTotal);
+  localStorage.setItem("produits", JSON.stringify(produits));
+  localStorage.setItem("caTotal", caTotal);
 }
 
-function caTotalSpan(){
-  document.getElementById("caTotal").innerText=caTotal;
+function updateCA(){
+  document.getElementById("caTotal").innerText = caTotal;
 }
 
-/* ===== PRODUITS ===== */
+/* ================= PRODUITS ================= */
 function ajouterProduit(){
   if(!designation.value) return;
+
   produits.push({
-    d:designation.value,
-    a:+achat.value,
-    v:+vente.value,
-    s:+stock.value
+    d: designation.value,
+    a: Number(achat.value),
+    v: Number(vente.value),
+    s: Number(stock.value)
   });
-  save(); afficherProduits();
+
+  save();
+  afficherProduits();
 }
 
 function afficherProduits(){
   let html="";
   produits.forEach((p,i)=>{
-    html+=`<tr>
-      <td>${p.d}</td><td>${p.s}</td><td>${p.v}</td>
-      <td>
-        <button onclick="vendre(${i})">Vendre</button>
-        <button onclick="supprimerProduit(${i})">❌</button>
-      </td>
-    </tr>`;
+    html += `
+      <tr>
+        <td>${p.d}</td>
+        <td>${p.s}</td>
+        <td>${p.v}</td>
+        <td>
+          <button onclick="vendre(${i})">Vendre</button>
+          <button onclick="supprimerProduit(${i})">❌</button>
+        </td>
+      </tr>
+    `;
   });
-  listeProduits.innerHTML=html;
+  document.getElementById("listeProduits").innerHTML = html;
 }
 
 function supprimerProduit(i){
   produits.splice(i,1);
-  save(); afficherProduits();
+  save();
+  afficherProduits();
 }
 
-/* ===== VENTE ===== */
+/* ================= VENTE ================= */
 function vendre(i){
-  if(produits[i].s<=0) return alert("Stock insuffisant");
+  if(produits[i].s <= 0){
+    alert("Stock insuffisant");
+    return;
+  }
+
   produits[i].s--;
-  let f=facture.find(x=>x.d===produits[i].d);
-  if(f) f.q++; else facture.push({d:produits[i].d,q:1,p:produits[i].v});
-  afficherFacture(); save();
+
+  let ligne = facture.find(f => f.d === produits[i].d);
+  if(ligne){
+    ligne.q++;
+  }else{
+    facture.push({ d: produits[i].d, q:1, p: produits[i].v });
+  }
+
+  afficherFacture();
+  save();
 }
 
 function afficherFacture(){
-  let t=0,html="";
+  let html="";
+  let total=0;
+
   facture.forEach((f,i)=>{
-    let l=f.q*f.p; t+=l;
-    html+=`<tr>
-      <td>${f.d}</td><td>${f.q}</td><td>${f.p}</td><td>${l}</td>
-      <td><button onclick="facture.splice(${i},1);afficherFacture()">❌</button></td>
-    </tr>`;
+    let t = f.q * f.p;
+    total += t;
+    html += `
+      <tr>
+        <td>${f.d}</td>
+        <td>${f.q}</td>
+        <td>${f.p}</td>
+        <td>${t}</td>
+        <td><button onclick="supprimerLigne(${i})">❌</button></td>
+      </tr>
+    `;
   });
-  facture.innerHTML=html;
-  totalFacture.innerText=t;
+
+  document.getElementById("facture").innerHTML = html;
+  document.getElementById("totalFacture").innerText = total;
+}
+
+function supprimerLigne(i){
+  facture.splice(i,1);
+  afficherFacture();
 }
 
 function validerFacture(){
-  let t=+totalFacture.innerText;
-  if(t===0) return;
-  caTotal+=t;
-  facture=[];
-  totalFacture.innerText=0;
-  facture.innerHTML="";
-  caTotalSpan(); save(); afficherProduits();
+  let total = Number(document.getElementById("totalFacture").innerText);
+  if(total === 0) return;
+
+  caTotal += total;
+  facture = [];
+
+  document.getElementById("facture").innerHTML="";
+  document.getElementById("totalFacture").innerText=0;
+
+  updateCA();
+  save();
+  afficherProduits();
 }
 
-/* ===== EXPORT CSV ===== */
+/* ================= EXPORT ================= */
 function exportCSV(){
-  let csv="Produit,Stock,Prix\n";
-  produits.forEach(p=>csv+=`${p.d},${p.s},${p.v}\n`);
-  let a=document.createElement("a");
-  a.href="data:text/csv;charset=utf-8,"+encodeURIComponent(csv);
-  a.download="produits.csv";
+  let csv = "Produit,Stock,Prix\n";
+  produits.forEach(p=>{
+    csv += `${p.d},${p.s},${p.v}\n`;
+  });
+
+  let a = document.createElement("a");
+  a.href = "data:text/csv;charset=utf-8," + encodeURIComponent(csv);
+  a.download = "produits.csv";
   a.click();
 }
 
-/* ===== SEARCH ===== */
+/* ================= RECHERCHE ================= */
 function recherche(){
-  let q=search.value.toLowerCase();
+  let q = document.getElementById("search").value.toLowerCase();
   document.querySelectorAll("#listeProduits tr").forEach(tr=>{
-    tr.style.display=tr.innerText.toLowerCase().includes(q)?"":"none";
+    tr.style.display = tr.innerText.toLowerCase().includes(q) ? "" : "none";
   });
 }
