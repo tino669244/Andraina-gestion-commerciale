@@ -2,113 +2,67 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Andraina Gestion Pro</title>
+  <title>Gestion Commerciale Pro</title>
   <link rel="stylesheet" href="style.css">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+  <!-- Login -->
+  <section id="loginSection">
+    <h2>Andraina Sacrifice - Login</h2>
+    <input id="user" placeholder="Utilisateur">
+    <input id="pass" type="password" placeholder="Mot de passe">
+    <button onclick="login()">Connexion</button>
+  </section>
 
-<!-- LOGIN -->
-<div id="login" class="login-box">
-  <h2>🔐 Andraina Sacrifice</h2>
+  <!-- Main -->
+  <section id="mainSection" style="display:none;">
+    <nav id="menu">
+      <button onclick="show('dashboard')">📊 Dashboard</button>
+      <button onclick="show('vente')">🧾 Documents de vente</button>
+      <button onclick="show('client')">👥 Relation clientèle</button>
+      <button onclick="show('achat')">🛒 Documents d’achat</button>
+      <button onclick="show('stock')">📦 Stock</button>
+      <button onclick="show('caisse')">💰 Caisse / BQ</button>
+      <button onclick="show('tva')">🧮 TVA</button>
+      <button onclick="show('agenda')">📅 Agenda fiscale</button>
+      <button onclick="logout()">🚪 Déconnexion</button>
+    </nav>
 
-  <div class="password-box">
-    <input type="password" id="password" placeholder="Mot de passe">
-    <span onclick="togglePwd()">👁️</span>
-  </div>
+    <div id="content">
+      <!-- Dashboard -->
+      <div id="dashboard" class="section">
+        <h2>Dashboard</h2>
+        <canvas id="chart" width="300" height="150"></canvas>
+      </div>
 
-  <button onclick="login()">Connexion</button>
-</div>
+      <!-- Vente -->
+      <div id="vente" class="section">
+        <h2>Documents de vente</h2>
+        <input id="nomProduit" placeholder="Nom produit">
+        <input id="prixProduit" placeholder="Prix en Ariary">
+        <button id="btnAjouter">Ajouter</button>
+        <input id="searchProduit" placeholder="Rechercher...">
+        <table>
+          <thead>
+            <tr><th>Nom</th><th>Prix</th><th>Action</th></tr>
+          </thead>
+          <tbody id="listeProduits"></tbody>
+        </table>
+        <h3>Total: <span id="totalVente">0</span> Ar</h3>
+        <button onclick="printFacture()">🖨️ Imprimer facture</button>
+      </div>
 
-<!-- APP -->
-<div id="app" class="hidden">
+      <!-- Autres sections -->
+      <div id="client" class="section"><h2>Relation clientèle</h2></div>
+      <div id="achat" class="section"><h2>Documents d’achat</h2></div>
+      <div id="stock" class="section"><h2>Stock</h2></div>
+      <div id="caisse" class="section"><h2>Caisse / BQ</h2></div>
+      <div id="tva" class="section"><h2>TVA</h2></div>
+      <div id="agenda" class="section"><h2>Agenda fiscale</h2></div>
+    </div>
+  </section>
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <h3>📦 Andraina Pro</h3>
-    <button onclick="show('dashboard')">📊 Dashboard</button>
-    <button onclick="show('vente')">🧾 Documents de vente</button>
-    <button onclick="show('client')">👥 Relation clientèle</button>
-    <button onclick="show('achat')">🛒 Documents d’achat</button>
-    <button onclick="show('stock')">📦 Stock</button>
-    <button onclick="show('caisse')">💰 Caisse / BQ</button>
-    <button onclick="show('tva')">🧮 TVA</button>
-    <button onclick="show('agenda')">📅 Agenda fiscale</button>
-    <button onclick="logout()">🚪 Déconnexion</button>
-  </aside>
-
-  <!-- MAIN -->
-  <main class="content">
-
-    <section id="dashboard">
-      <h2>📊 Dashboard</h2>
-      <label>Filtrer par mois : 
-        <select id="filterMonth" onchange="updateDashboard()">
-          <option value="0">Janvier 2026</option>
-          <option value="1">Février 2026</option>
-          <option value="2">Mars 2026</option>
-        </select>
-      </label>
-      <canvas id="caChart" width="400" height="200"></canvas>
-      <table>
-        <tr><th>Portefeuille</th><td id="portefeuille">0 Ar</td></tr>
-        <tr><th>CA Commercial</th><td id="caTotal">0 Ar</td></tr>
-        <tr><th>Total documents</th><td id="totalDocs">0</td></tr>
-      </table>
-    </section>
-
-    <section id="vente" class="hidden">
-      <h2>🧾 Documents de vente</h2>
-      <table>
-        <tr><th>Type</th><th>Client</th><th>Date</th><th>Total</th></tr>
-      </table>
-    </section>
-
-    <section id="client" class="hidden">
-      <h2>👥 Relation clientèle</h2>
-      <table>
-        <tr><th>Client</th><th>Téléphone</th><th>Solde</th></tr>
-      </table>
-    </section>
-
-    <section id="achat" class="hidden">
-      <h2>🛒 Documents d’achat</h2>
-      <table>
-        <tr><th>Fournisseur</th><th>Date</th><th>Montant</th></tr>
-      </table>
-    </section>
-
-    <section id="stock" class="hidden">
-      <h2>📦 Documents du stock</h2>
-      <table>
-        <tr><th>Article</th><th>Entrée</th><th>Sortie</th><th>Stock</th></tr>
-      </table>
-    </section>
-
-    <section id="caisse" class="hidden">
-      <h2>💰 Caisse / Banque</h2>
-      <table>
-        <tr><th>Type</th><th>Date</th><th>Montant</th></tr>
-      </table>
-    </section>
-
-    <section id="tva" class="hidden">
-      <h2>🧮 TVA</h2>
-      <table>
-        <tr><th>TVA collectée</th><th>TVA déductible</th><th>Solde</th></tr>
-      </table>
-    </section>
-
-    <section id="agenda" class="hidden">
-      <h2>📅 Agenda fiscale</h2>
-      <table>
-        <tr><th>Date</th><th>Événement</th></tr>
-      </table>
-    </section>
-
-  </main>
-</div>
-
-<script src="script.js"></script>
+  <script src="script.js"></script>
 </body>
 </html>
