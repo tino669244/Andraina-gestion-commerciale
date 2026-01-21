@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <title>Andraina Gestion Pro</title>
   <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 
@@ -41,10 +42,18 @@
 
     <section id="dashboard">
       <h2>📊 Dashboard</h2>
+      <label>Filtrer par mois : 
+        <select id="filterMonth" onchange="updateDashboard()">
+          <option value="0">Janvier 2026</option>
+          <option value="1">Février 2026</option>
+          <option value="2">Mars 2026</option>
+        </select>
+      </label>
+      <canvas id="caChart" width="400" height="200"></canvas>
       <table>
-        <tr><th>Portefeuille</th><td>0 Ar</td></tr>
-        <tr><th>CA Commercial</th><td>0 Ar</td></tr>
-        <tr><th>Total documents</th><td>0</td></tr>
+        <tr><th>Portefeuille</th><td id="portefeuille">0 Ar</td></tr>
+        <tr><th>CA Commercial</th><td id="caTotal">0 Ar</td></tr>
+        <tr><th>Total documents</th><td id="totalDocs">0</td></tr>
       </table>
     </section>
 
@@ -52,7 +61,6 @@
       <h2>🧾 Documents de vente</h2>
       <table>
         <tr><th>Type</th><th>Client</th><th>Date</th><th>Total</th></tr>
-        <tr><td>Facture</td><td>-</td><td>-</td><td>-</td></tr>
       </table>
     </section>
 
@@ -60,7 +68,6 @@
       <h2>👥 Relation clientèle</h2>
       <table>
         <tr><th>Client</th><th>Téléphone</th><th>Solde</th></tr>
-        <tr><td>-</td><td>-</td><td>-</td></tr>
       </table>
     </section>
 
@@ -68,7 +75,6 @@
       <h2>🛒 Documents d’achat</h2>
       <table>
         <tr><th>Fournisseur</th><th>Date</th><th>Montant</th></tr>
-        <tr><td>-</td><td>-</td><td>-</td></tr>
       </table>
     </section>
 
@@ -76,7 +82,6 @@
       <h2>📦 Documents du stock</h2>
       <table>
         <tr><th>Article</th><th>Entrée</th><th>Sortie</th><th>Stock</th></tr>
-        <tr><td>-</td><td>-</td><td>-</td><td>-</td></tr>
       </table>
     </section>
 
@@ -84,7 +89,6 @@
       <h2>💰 Caisse / Banque</h2>
       <table>
         <tr><th>Type</th><th>Date</th><th>Montant</th></tr>
-        <tr><td>Entrée</td><td>-</td><td>-</td></tr>
       </table>
     </section>
 
@@ -92,7 +96,6 @@
       <h2>🧮 TVA</h2>
       <table>
         <tr><th>TVA collectée</th><th>TVA déductible</th><th>Solde</th></tr>
-        <tr><td>0</td><td>0</td><td>0</td></tr>
       </table>
     </section>
 
@@ -100,7 +103,6 @@
       <h2>📅 Agenda fiscale</h2>
       <table>
         <tr><th>Date</th><th>Événement</th></tr>
-        <tr><td>-</td><td>-</td></tr>
       </table>
     </section>
 
