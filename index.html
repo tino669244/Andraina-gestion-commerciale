@@ -15,17 +15,13 @@
     <button onclick="login()">Connexion</button>
   </section>
 
-  <!-- Main -->
+  <!-- Main app -->
   <section id="mainSection" style="display:none;">
     <nav id="menu">
       <button onclick="show('dashboard')">📊 Dashboard</button>
-      <button onclick="show('vente')">🧾 Documents de vente</button>
-      <button onclick="show('client')">👥 Relation clientèle</button>
-      <button onclick="show('achat')">🛒 Documents d’achat</button>
+      <button onclick="show('vente')">🧾 Vente</button>
       <button onclick="show('stock')">📦 Stock</button>
       <button onclick="show('caisse')">💰 Caisse / BQ</button>
-      <button onclick="show('tva')">🧮 TVA</button>
-      <button onclick="show('agenda')">📅 Agenda fiscale</button>
       <button onclick="logout()">🚪 Déconnexion</button>
     </nav>
 
@@ -34,32 +30,49 @@
       <div id="dashboard" class="section">
         <h2>Dashboard</h2>
         <canvas id="chart" width="300" height="150"></canvas>
+        <p>Total ventes: <span id="totalVentesDashboard">0</span> Ar</p>
+        <p>Total bénéfice: <span id="totalBeneficeDashboard">0</span> Ar</p>
       </div>
 
       <!-- Vente -->
       <div id="vente" class="section">
-        <h2>Documents de vente</h2>
-        <input id="nomProduit" placeholder="Nom produit">
-        <input id="prixProduit" placeholder="Prix en Ariary">
-        <button id="btnAjouter">Ajouter</button>
-        <input id="searchProduit" placeholder="Rechercher...">
+        <h2>Vente</h2>
+        <select id="selectProduit"></select>
+        <input id="venteQte" type="number" min="1" placeholder="Quantité">
+        <button onclick="ajouterVente()">Ajouter à la vente</button>
+        <input id="searchVente" placeholder="Rechercher produit...">
         <table>
           <thead>
-            <tr><th>Nom</th><th>Prix</th><th>Action</th></tr>
+            <tr><th>Produit</th><th>Qté</th><th>Prix vente</th><th>Total</th><th>Action</th></tr>
           </thead>
-          <tbody id="listeProduits"></tbody>
+          <tbody id="listeVentes"></tbody>
         </table>
-        <h3>Total: <span id="totalVente">0</span> Ar</h3>
+        <h3>Total vente: <span id="totalVente">0</span> Ar</h3>
         <button onclick="printFacture()">🖨️ Imprimer facture</button>
       </div>
 
-      <!-- Autres sections -->
-      <div id="client" class="section"><h2>Relation clientèle</h2></div>
-      <div id="achat" class="section"><h2>Documents d’achat</h2></div>
-      <div id="stock" class="section"><h2>Stock</h2></div>
-      <div id="caisse" class="section"><h2>Caisse / BQ</h2></div>
-      <div id="tva" class="section"><h2>TVA</h2></div>
-      <div id="agenda" class="section"><h2>Agenda fiscale</h2></div>
+      <!-- Stock -->
+      <div id="stock" class="section">
+        <h2>Stock</h2>
+        <input id="nomProduitStock" placeholder="Nom produit">
+        <input id="qteStock" type="number" min="1" placeholder="Quantité initiale">
+        <input id="prixAchatStock" type="number" placeholder="Prix d'achat">
+        <input id="prixVenteStock" type="number" placeholder="Prix de vente">
+        <button onclick="ajouterProduitStock()">Ajouter produit</button>
+        <input id="searchStock" placeholder="Rechercher stock...">
+        <table>
+          <thead>
+            <tr><th>Produit</th><th>Qté dispo</th><th>Prix achat</th><th>Prix vente</th><th>Prix revient</th><th>Action</th></tr>
+          </thead>
+          <tbody id="listeStock"></tbody>
+        </table>
+      </div>
+
+      <!-- Caisse / BQ -->
+      <div id="caisse" class="section">
+        <h2>Caisse / BQ</h2>
+        <p>Encaisse réel: <span id="encaisse">0</span> Ar</p>
+      </div>
     </div>
   </section>
 
