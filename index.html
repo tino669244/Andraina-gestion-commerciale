@@ -5,72 +5,92 @@
   <title>Andraina Gestion Commerciale</title>
   <link rel="stylesheet" href="style.css">
 </head>
-<body onload="initApp()">
+<body>
 
 <!-- LOGIN -->
-<div id="loginBox" class="login">
+<div id="loginBox">
   <h2>Andraina Sacrifice</h2>
-  <input id="loginPass" type="password" placeholder="Mot de passe">
+  <input type="password" id="password" placeholder="Mot de passe">
   <button onclick="login()">Connexion</button>
 </div>
 
-<!-- APPLICATION -->
-<div id="app" style="display:none">
-<header>
-  <h1>Andraina Gestion Commerciale</h1>
-  <div class="ca">CA Total : <span id="caTotal">0</span> Ar</div>
-  <button onclick="logout()">Déconnexion</button>
-</header>
+<!-- APP -->
+<div id="app" class="hidden">
 
-<section class="box">
-  <h2>Ajouter produit</h2>
-  <input id="designation" placeholder="Désignation">
-  <input id="achat" type="number" placeholder="Prix achat">
-  <input id="vente" type="number" placeholder="Prix vente">
-  <input id="stock" type="number" placeholder="Stock">
-  <button onclick="ajouterProduit()">Ajouter</button>
-</section>
+  <nav>
+    <h3>MENU</h3>
+    <button onclick="show('dashboard')">Dashboard</button>
+    <button onclick="show('produits')">Produits</button>
+    <button onclick="show('vente')">Vente</button>
+    <button onclick="show('facture')">Facture</button>
+    <button onclick="show('caisse')">Caisse</button>
+  </nav>
 
-<section class="box">
-  <h2>Produits</h2>
-  <input id="search" placeholder="🔍 Rechercher" onkeyup="recherche()">
-  <table>
-    <thead>
-      <tr>
-        <th>Produit</th>
-        <th>Stock</th>
-        <th>Prix</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody id="listeProduits"></tbody>
-  </table>
-</section>
+  <main>
 
-<section class="box">
-  <h2>Facture (session)</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Produit</th>
-        <th>Qté</th>
-        <th>Prix</th>
-        <th>Total</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody id="facture"></tbody>
-  </table>
-  <div class="total">Total : <span id="totalFacture">0</span> Ar</div>
-  <button class="valider" onclick="validerFacture()">Valider facture</button>
-</section>
+    <!-- DASHBOARD -->
+    <section id="dashboard">
+      <h2>Tableau de bord</h2>
+      <p>Chiffre d'affaires : <span id="ca">0</span> Ar</p>
+      <p>Bénéfice : <span id="benefice">0</span> Ar</p>
+    </section>
 
-<section class="box">
-  <h2>Export</h2>
-  <button onclick="exportCSV()">Exporter produits (CSV)</button>
-</section>
+    <!-- PRODUITS -->
+    <section id="produits" class="hidden">
+      <h2>Produits</h2>
+      <input id="pNom" placeholder="Désignation">
+      <input id="pAchat" type="number" placeholder="Prix achat">
+      <input id="pVente" type="number" placeholder="Prix vente">
+      <input id="pQte" type="number" placeholder="Quantité">
+      <button onclick="ajouterProduit()">Ajouter</button>
 
-<footer>Merci pour votre visite !</footer>
+      <input placeholder="Recherche..." oninput="rechercheProduit(this.value)">
+
+      <table>
+        <thead>
+          <tr>
+            <th>Nom</th><th>PA</th><th>PV</th><th>Qté</th><th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="listeProduits"></tbody>
+      </table>
+    </section>
+
+    <!-- VENTE -->
+    <section id="vente" class="hidden">
+      <h2>Vente</h2>
+      <select id="venteProduit"></select>
+      <input id="venteQte" type="number" placeholder="Quantité">
+      <button onclick="vendre()">Vendre</button>
+    </section>
+
+    <!-- FACTURE -->
+    <section id="facture" class="hidden">
+      <h2>Facture</h2>
+      <p>Entreprise : Andraina Service</p>
+      <p>Date : <span id="dateFacture"></span></p>
+
+      <table>
+        <thead>
+          <tr><th>Désignation</th><th>Qté</th><th>PU</th><th>Total</th></tr>
+        </thead>
+        <tbody id="factureBody"></tbody>
+      </table>
+
+      <h3>Total : <span id="totalFacture">0</span> Ar</h3>
+      <p>Merci pour votre visite !</p>
+
+      <button onclick="imprimer()">Imprimer</button>
+      <button onclick="viderFacture()">Nouvelle facture</button>
+    </section>
+
+    <!-- CAISSE -->
+    <section id="caisse" class="hidden">
+      <h2>Caisse</h2>
+      <p>Solde caisse : <span id="soldeCaisse">0</span> Ar</p>
+    </section>
+
+  </main>
 </div>
 
 <script src="script.js"></script>
