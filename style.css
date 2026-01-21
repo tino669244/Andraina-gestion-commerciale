@@ -1,57 +1,76 @@
 body {
-  font-family: Arial;
-  background: #0f172a;
-  color: white;
   margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f1f5f9;
 }
 
 .hidden { display: none; }
 
-#loginBox {
+/* LOGIN */
+.login-box {
   width: 300px;
   margin: 150px auto;
-  background: #020617;
   padding: 20px;
+  background: #020617;
+  color: white;
   text-align: center;
   border-radius: 10px;
 }
 
-input, button, select {
-  width: 100%;
-  margin: 5px 0;
+.password-box {
+  display: flex;
+  align-items: center;
+}
+
+.password-box input {
+  flex: 1;
   padding: 8px;
 }
 
-button {
-  background: #22c55e;
+.password-box span {
+  cursor: pointer;
+  padding: 8px;
+}
+
+/* SIDEBAR */
+.sidebar {
+  width: 220px;
+  background: #020617;
+  color: white;
+  height: 100vh;
+  position: fixed;
+  padding: 10px;
+}
+
+.sidebar button {
+  width: 100%;
+  margin: 4px 0;
+  padding: 8px;
+  background: #1e293b;
+  color: white;
   border: none;
   cursor: pointer;
 }
 
-nav {
-  width: 200px;
-  background: #020617;
-  height: 100vh;
-  float: left;
-  padding: 10px;
-}
-
-main {
-  margin-left: 210px;
+/* CONTENT */
+.content {
+  margin-left: 240px;
   padding: 20px;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
+  background: white;
 }
 
 th {
-  background: #22c55e;
-  color: black;
+  background: #2563eb;
+  color: white;
+  padding: 8px;
 }
 
-td, th {
-  border: 1px solid #334155;
-  padding: 5px;
+td {
+  border: 1px solid #cbd5e1;
+  padding: 6px;
 }
