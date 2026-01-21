@@ -1,76 +1,72 @@
 body {
-  margin: 0;
   font-family: Arial, sans-serif;
-  background: #f1f5f9;
+  margin: 0; padding: 0;
+  background: #f0f2f5;
 }
 
-.hidden { display: none; }
-
-/* LOGIN */
-.login-box {
-  width: 300px;
-  margin: 150px auto;
-  padding: 20px;
-  background: #020617;
-  color: white;
+#loginSection {
+  max-width: 300px;
+  margin: 100px auto;
   text-align: center;
+  padding: 20px;
+  background: #fff;
   border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.2);
 }
 
-.password-box {
+#loginSection input {
+  width: 80%;
+  padding: 8px;
+  margin: 5px 0;
+}
+
+#loginSection button {
+  padding: 8px 15px;
+  margin-top: 10px;
+}
+
+#menu {
   display: flex;
-  align-items: center;
-}
-
-.password-box input {
-  flex: 1;
-  padding: 8px;
-}
-
-.password-box span {
-  cursor: pointer;
-  padding: 8px;
-}
-
-/* SIDEBAR */
-.sidebar {
-  width: 220px;
-  background: #020617;
-  color: white;
-  height: 100vh;
-  position: fixed;
+  flex-wrap: wrap;
+  background: #1e1e1e;
   padding: 10px;
 }
 
-.sidebar button {
-  width: 100%;
-  margin: 4px 0;
-  padding: 8px;
-  background: #1e293b;
-  color: white;
+#menu button {
+  margin: 5px;
+  padding: 8px 12px;
+  background: #007bff;
+  color: #fff;
   border: none;
+  border-radius: 5px;
   cursor: pointer;
 }
 
-/* CONTENT */
-.content {
-  margin-left: 240px;
+#menu button:hover {
+  background: #0056b3;
+}
+
+.section {
+  display: none;
   padding: 20px;
 }
 
 table {
   width: 100%;
   border-collapse: collapse;
-  background: white;
+  margin-top: 10px;
+}
+
+table, th, td {
+  border: 1px solid #333;
 }
 
 th {
-  background: #2563eb;
-  color: white;
-  padding: 8px;
+  background: #007bff;
+  color: #fff;
 }
 
 td {
-  border: 1px solid #cbd5e1;
-  padding: 6px;
+  text-align: center;
+  padding: 5px;
 }
