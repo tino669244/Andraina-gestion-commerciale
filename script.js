@@ -1,94 +1,116 @@
-const PASSWORD = "1234";
-
-// Simulation des ventes
-let ventes = [
-  {produit:"Produit A", total:5000, date:"2026-01-05"},
-  {produit:"Produit B", total:3000, date:"2026-01-15"},
-  {produit:"Produit C", total:2000, date:"2026-02-10"},
-  {produit:"Produit D", total:7000, date:"2026-01-20"},
-  {produit:"Produit E", total:1000, date:"2026-01-25"},
-  {produit:"Produit F", total:4000, date:"2026-01-28"}
-];
-
-let caChart;
-
-// LOGIN
-function togglePwd() {
-  const p = document.getElementById("password");
-  p.type = p.type === "password" ? "text" : "password";
-}
+// Sections et login
+const loginSection = document.getElementById("loginSection");
+const mainSection = document.getElementById("mainSection");
+const user = document.getElementById("user");
+const pass = document.getElementById("pass");
 
 function login() {
-  if (password.value === PASSWORD) {
-    localStorage.setItem("logged", "true");
-    showApp();
-    updateDashboard();
+  if(user.value === "admin" && pass.value === "1234") {
+    loginSection.style.display = "none";
+    mainSection.style.display = "block";
+    show("dashboard");
+    renderChart();
   } else {
     alert("Mot de passe incorrect");
   }
 }
 
 function logout() {
-  localStorage.setItem("logged", "false");
-  location.reload();
+  mainSection.style.display = "none";
+  loginSection.style.display = "block";
+  user.value = "";
+  pass.value = "";
 }
 
-// SHOW SECTIONS
-function showApp() {
-  document.getElementById("login").classList.add("hidden");
-  document.getElementById("app").classList.remove("hidden");
+// Navigation
+function show(sectionId){
+  document.querySelectorAll(".section").forEach(sec=>sec.style.display="none");
+  document.getElementById(sectionId).style.display="block";
 }
 
-function show(id) {
-  document.querySelectorAll("main section").forEach(s => s.classList.add("hidden"));
-  document.getElementById(id).classList.remove("hidden");
-}
+// Produits / vente
+const nomProduit = document.getElementById("nomProduit");
+const prixProduit = document.getElementById("prixProduit");
+const btnAjouter = document.getElementById("btnAjouter");
+const listeProduits = document.getElementById("listeProduits");
+const searchProduit = document.getElementById("searchProduit");
+const totalVente = document.getElementById("totalVente");
 
-// DASHBOARD
-function updateDashboard() {
-  const month = parseInt(document.getElementById("filterMonth").value);
-  const ventesMonth = ventes.filter(v => new Date(v.date).getMonth() === month && new Date(v.date).getFullYear() === 2026);
+let produits = JSON.parse(localStorage.getItem("produits")) || [];
 
-  // Agréger par produit
-  let caParProduit = {};
-  ventesMonth.forEach(v => {
-    caParProduit[v.produit] = (caParProduit[v.produit] || 0) + v.total;
+function afficherProduits(filter="") {
+  listeProduits.innerHTML = "";
+  let total = 0;
+  produits.filter(p => p.nom.toLowerCase().includes(filter.toLowerCase()))
+          .forEach((p,index)=>{
+    total += p.prix;
+    const tr = document.createElement("tr");
+    tr.innerHTML = `<td>${p.nom}</td><td>${p.prix} Ar</td>
+                    <td><button onclick="supprimerProduit(${index})">❌</button></td>`;
+    listeProduits.appendChild(tr);
   });
+  totalVente.textContent = total;
+  localStorage.setItem("produits", JSON.stringify(produits));
+}
 
-  // Top 5 produits
-  let sorted = Object.entries(caParProduit).sort((a,b) => b[1]-a[1]);
-  let top5 = sorted.slice(0,5);
+btnAjouter.addEventListener("click",()=>{
+  if(nomProduit.value && prixProduit.value){
+    produits.push({nom: nomProduit.value, prix: parseInt(prixProduit.value)});
+    nomProduit.value=""; prixProduit.value="";
+    afficherProduits();
+    renderChart();
+  }
+});
 
-  let caTotal = top5.reduce((sum, e) => sum + e[1], 0);
-  document.getElementById("caTotal").innerText = caTotal + " Ar";
-  document.getElementById("portefeuille").innerText = caTotal + " Ar";
-  document.getElementById("totalDocs").innerText = ventesMonth.length;
+function supprimerProduit(index){
+  produits.splice(index,1);
+  afficherProduits();
+  renderChart();
+}
 
-  // Chart
-  const ctx = document.getElementById('caChart').getContext('2d');
-  if(caChart) caChart.destroy();
+searchProduit.addEventListener("input",(e)=>{
+  afficherProduits(e.target.value);
+});
 
-  caChart = new Chart(ctx, {
-    type: 'pie',
+// Facture printable
+function printFacture(){
+  let facture = "<h2>Facture</h2><table><tr><th>Produit</th><th>Prix</th></tr>";
+  let total = 0;
+  produits.forEach(p=>{
+    facture += `<tr><td>${p.nom}</td><td>${p.prix} Ar</td></tr>`;
+    total += p.prix;
+  });
+  facture += `<tr><td>Total</td><td>${total} Ar</td></tr></table>`;
+  facture += "<p>Merci pour votre visite !</p>";
+  const win = window.open("","Facture","width=500,height=600");
+  win.document.write(facture);
+  win.print();
+}
+
+// Dashboard graphique
+function renderChart(){
+  const ctx = document.getElementById("chart").getContext("2d");
+  const labels = produits.map(p=>p.nom);
+  const data = produits.map(p=>p.prix);
+  if(window.myChart) window.myChart.destroy();
+  window.myChart = new Chart(ctx,{
+    type: 'bar',
     data: {
-      labels: top5.map(e => e[0]),
-      datasets: [{
-        data: top5.map(e => e[1]),
-        backgroundColor: ['#2563eb','#60a5fa','#93c5fd','#e0f2fe','#3b82f6']
+      labels: labels,
+      datasets:[{
+        label:'Montant Ariary',
+        data:data,
+        backgroundColor:'rgba(0,123,255,0.7)',
+        borderColor:'rgba(0,123,255,1)',
+        borderWidth:1
       }]
     },
-    options: {
-      plugins: {
-        legend: { position: 'bottom' },
-        title: { display: true, text: 'Top 5 produits du mois' }
-      }
+    options:{
+      responsive:true,
+      scales:{y:{beginAtZero:true}}
     }
   });
 }
 
-window.onload = () => {
-  if (localStorage.getItem("logged") === "true") {
-    showApp();
-    updateDashboard();
-  }
-};
+// Initialisation
+afficherProduits();
